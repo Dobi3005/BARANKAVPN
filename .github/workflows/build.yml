@@ -16,9 +16,11 @@ jobs:
       - name: Скачать ядро Xray
         shell: pwsh
         run: |
+          New-Item -ItemType Directory -Force -Path assets/xray | Out-Null
           Invoke-WebRequest https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-64.zip -OutFile xray.zip
           Expand-Archive xray.zip -DestinationPath xray_tmp
           Copy-Item xray_tmp/xray.exe assets/xray/xray.exe
+          Copy-Item xray_tmp/*.dat assets/xray/ -ErrorAction SilentlyContinue
       - run: flutter build windows --release
       - uses: actions/upload-artifact@v4
         with:
