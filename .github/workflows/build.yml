@@ -1,0 +1,45 @@
+name: build
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable }
+      - run: flutter create --platforms=windows .
+      - run: flutter pub get
+      - name: Скачать ядро Xray
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-64.zip -OutFile xray.zip
+          Expand-Archive xray.zip -DestinationPath xray_tmp
+          Copy-Item xray_tmp/xray.exe assets/xray/xray.exe
+      - run: flutter build windows --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baranka-windows
+          path: build/windows/x64/runner/Release
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable }
+      - run: flutter create --platforms=android .
+      - name: minSdk 24 для flutter_v2ray
+        run: |
+          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 24/; s/minSdkVersion flutter.minSdkVersion/minSdkVersion 24/' android/app/build.gradle* || true
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baranka-android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
