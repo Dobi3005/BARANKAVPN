@@ -1,0 +1,6 @@
+build/
+.dart_tool/
+.flutter-plugins*
+assets/xray/xray.exe
+assets/xray/*.dat
+*.iml

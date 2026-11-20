@@ -1,0 +1,29 @@
+name: baranka
+description: Баранка VPN — кроссплатформенный клиент VLESS/Reality (Xray).
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.2.1
+  shared_preferences: ^2.3.2
+  path_provider: ^2.1.4
+  path: ^1.9.0
+  flutter_v2ray: ^1.0.10      # Android + iOS (ядро Xray)
+  tray_manager: ^0.2.3        # трей Windows
+  window_manager: ^0.4.2      # окно Windows (скрытие в трей)
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/xray/
+    - assets/tray/
